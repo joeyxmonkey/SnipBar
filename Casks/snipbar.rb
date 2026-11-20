@@ -7,7 +7,7 @@ cask "snipbar" do
   desc "Screen snipping tool with a global keyboard shortcut"
   homepage "https://github.com/joeyxmonkey/SnipBar"
 
-  depends_on macos: ">= :sonoma"
+  depends_on macos: :sonoma
 
   app "SnipBar.app"
 end
