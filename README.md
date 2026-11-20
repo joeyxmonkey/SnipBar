@@ -2,6 +2,20 @@
 
 SnipBar brings the Windows-style snipping shortcut to macOS. Press **⌘⇧S** from any app, pick a capture mode, and use the crosshair to make a selection. SnipBar runs in the background without a Dock icon.
 
+## Install with Homebrew
+
+SnipBar's cask lives in this repository. Tap it once, then install SnipBar on **macOS 14 Sonoma or later**.
+
+```sh
+brew tap joeyxmonkey/snipbar https://github.com/joeyxmonkey/SnipBar.git
+brew install --cask joeyxmonkey/snipbar/snipbar
+open -a SnipBar
+```
+
+The cask installs the universal app for Apple silicon and Intel Macs in `/Applications`. The [release build](https://github.com/joeyxmonkey/SnipBar/releases) is ad hoc signed and unnotarized. macOS may require you to approve it on first launch. See [Apple’s guidance on opening unnotarized apps](https://support.apple.com/en-us/102445).
+
+To upgrade, quit SnipBar and run `brew upgrade --cask joeyxmonkey/snipbar/snipbar`. To uninstall, turn off **Start at login**, quit SnipBar, then run `brew uninstall --cask joeyxmonkey/snipbar/snipbar`.
+
 ## Install from source
 
 You’ll need **macOS 14 Sonoma or later** and Apple’s Xcode Command Line Tools. If you need the tools, run `xcode-select --install` first. The build uses the system Swift compiler and Apple frameworks.
@@ -14,6 +28,8 @@ open "$HOME/Applications/SnipBar.app"
 ```
 
 The script installs a locally signed app in `~/Applications` and builds for the Mac’s architecture. To install in another folder, pass it to the script, for example `bash build.sh ./build`. For updates, quit SnipBar, pull the new source, run the build again, and reopen the app.
+
+## Grant screen recording access
 
 The first capture needs **Screen & System Audio Recording** permission. In SnipBar, click **Screen Recording Access…**, then enable SnipBar under **System Settings → Privacy & Security → Screen & System Audio Recording**. Quit and reopen SnipBar if macOS prompts you.
 
@@ -55,6 +71,10 @@ To uninstall, turn off **Start at login**, use **Quit SnipBar** in settings, and
 `Sources/App.swift` manages the app lifecycle and capture flow. `Sources/Overlay.swift` handles the on-screen selection. `Sources/Capture.swift` uses ScreenCaptureKit to read pixels and writes the result to the clipboard or a PNG. `Sources/Settings.swift` and `Sources/Shortcut.swift` manage preferences and the global shortcut.
 
 Before submitting a change, run `bash build.sh ./build` and test the affected capture mode or setting in the built app. When reporting an issue, include your macOS version, display setup, and steps to reproduce it.
+
+### Publish a release
+
+Update the version and build number in `Info.plist`. Run `bash package-release.sh` to create the universal ZIP in `build/` and print its SHA-256. Update the version and checksum in `Casks/snipbar.rb`, then commit the changes. Publish a GitHub release from that commit using the matching `v<version>` tag and attach `SnipBar-<version>.zip`.
 
 ## License
 
